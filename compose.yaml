@@ -1,0 +1,22 @@
+services:
+  web:
+    container_name: task-web
+    build:
+      context: ./container/web/
+      dockerfile: ./Dockerfile
+    depends_on:
+      - backend
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./container/web/conf.d:/etc/nginx/conf.d
+      - ./container/web/ssl:/etc/nginx/ssl
+  backend:
+    container_name: task-backend
+    build:
+      context: ./container/backend/
+      dockerfile: ./Dockerfile
+    volumes:
+      - ./container/backend/src:/src
+    tty: true
