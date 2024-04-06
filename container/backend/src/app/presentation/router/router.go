@@ -5,6 +5,7 @@ import (
 	"os"
 	"task/app/application/interface/database"
 	"task/app/application/schema"
+	"task/app/application/usecase"
 	"task/app/presentation/controller"
 	appmiddleware "task/app/presentation/middleware"
 
@@ -15,7 +16,10 @@ import (
 )
 
 func SetUp(e *echo.Echo, logger *zap.Logger, databaseHandller database.IDatabaseHandller) error {
+	workspaceUsecase := usecase.NewWorkspaceUsecase(databaseHandller)
+
 	csrfController := controller.NewCsrfController()
+	workspaceController := controller.NewWorkspaceController(workspaceUsecase)
 
 	// apiグループ
 	api := e.Group("/api")
@@ -55,6 +59,9 @@ func SetUp(e *echo.Echo, logger *zap.Logger, databaseHandller database.IDatabase
 
 	// CSRF関連
 	api.GET("/csrf", csrfController.GetCsrfToken)
+
+	// ワークスペース関連
+	api.POST("/workspace", workspaceController.CreateWorkspace)
 
 	// v1グループ
 	v1 := api.Group("/v1")

@@ -40,3 +40,7 @@ func (dh *databaseHandller) Transaction(fn func(database.IRepositoryFactory) err
 		return fn(NewRepositoryFactory(tx))
 	})
 }
+
+func (dh *databaseHandller) GetRepositoryFactory() database.IRepositoryFactory {
+	return NewRepositoryFactory(dh.db)
+}

@@ -17,6 +17,17 @@ type DefaultResponseModel struct {
 	Message string `json:"message"`
 }
 
+// WorkspaceCreateModel defines model for WorkspaceCreateModel.
+type WorkspaceCreateModel struct {
+	Name         string `json:"name"`
+	UserEmail    string `json:"user_email"`
+	UserName     string `json:"user_name"`
+	UserPassword string `json:"user_password"`
+}
+
+// CreateWorkspaceJSONRequestBody defines body for CreateWorkspace for application/json ContentType.
+type CreateWorkspaceJSONRequestBody = WorkspaceCreateModel
+
 // ServerInterface represents all server handlers.
 type ServerInterface interface {
 
@@ -25,6 +36,9 @@ type ServerInterface interface {
 
 	// (GET /api/csrf)
 	GetCsrfToken(ctx echo.Context) error
+
+	// (POST /api/workspace)
+	CreateWorkspace(ctx echo.Context) error
 }
 
 // ServerInterfaceWrapper converts echo contexts to parameters.
@@ -47,6 +61,15 @@ func (w *ServerInterfaceWrapper) GetCsrfToken(ctx echo.Context) error {
 
 	// Invoke the callback with all the unmarshaled arguments
 	err = w.Handler.GetCsrfToken(ctx)
+	return err
+}
+
+// CreateWorkspace converts echo context to params.
+func (w *ServerInterfaceWrapper) CreateWorkspace(ctx echo.Context) error {
+	var err error
+
+	// Invoke the callback with all the unmarshaled arguments
+	err = w.Handler.CreateWorkspace(ctx)
 	return err
 }
 
@@ -80,5 +103,6 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 
 	router.GET(baseURL+"/api", wrapper.GetApi)
 	router.GET(baseURL+"/api/csrf", wrapper.GetCsrfToken)
+	router.POST(baseURL+"/api/workspace", wrapper.CreateWorkspace)
 
 }

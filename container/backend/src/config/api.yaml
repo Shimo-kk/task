@@ -26,6 +26,36 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/CSRFModel"
+  /api/workspace:
+    post:
+      operationId: CreateWorkspace
+      tags:
+        - workspace
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/WorkspaceCreateModel"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DefaultResponseModel"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DefaultResponseModel"
+        "422":
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DefaultResponseModel"
+  
 
 components:
   schemas:
@@ -43,3 +73,19 @@ components:
           type: string
       required:
         - csrf
+    WorkspaceCreateModel:
+      type: object
+      properties:
+        name:
+          type: string
+        user_name:
+          type: string
+        user_email:
+          type: string
+        user_password:
+          type: string
+      required:
+        - name
+        - user_name
+        - user_email
+        - user_password
